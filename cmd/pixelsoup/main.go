@@ -15,15 +15,12 @@ func main() {
 }
 
 func createLogSetting(conf *config.Config) *logger.LogConfig {
-	const logFileName = "log.json"
 	logSettings := &logger.LogConfig{}
-	switch conf.Env {
-	case "development":
-		logSettings.Core = logger.Console
-	case "production":
+	if conf.Env == "production" || conf.Env == "prod" {
 		logSettings.Core = logger.File
-		logSettings.FileName = logFileName
+		logSettings.FileName = config.LogFileName
+	} else {
+		logSettings.Core = logger.Console
 	}
-
 	return logSettings
 }

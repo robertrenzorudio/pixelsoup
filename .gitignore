@@ -1,0 +1,8 @@
+# Build
+main
+
+# Log Files
+logs
+
+# Envs
+.env
