@@ -13,7 +13,7 @@ type Config struct {
 func New() *Config {
 	return &Config{
 		Env:           getEnvAsEnvType("ENV", "development"),
-		JobsQueueName: getEnv("JOBS_QUEUE_NAME", ""),
+		JobsQueueName: getEnv("AWS_JOBS_QUEUE_NAME", ""),
 	}
 }
 
