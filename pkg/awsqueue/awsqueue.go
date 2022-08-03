@@ -17,7 +17,13 @@ type AWSQueue struct {
 	visibilityTimeout int32
 }
 
-func New(ctx context.Context, queueName string) (*AWSQueue, error) {
+type AWSQueueConfig struct {
+	QueueName         string
+	WaitTimeSeconds   int32
+	VisibilityTimeout int32
+}
+
+func New(ctx context.Context, conf *AWSQueueConfig) (*AWSQueue, error) {
 	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion("us-west-1"))
 
 	if err != nil {
@@ -25,15 +31,15 @@ func New(ctx context.Context, queueName string) (*AWSQueue, error) {
 	}
 
 	q := AWSQueue{
-		client: sqs.NewFromConfig(cfg), queueName: queueName}
+		client: sqs.NewFromConfig(cfg), queueName: conf.QueueName}
 
 	err = q.getQueueUrl(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	q.waitTimeSeconds = 20
-	q.visibilityTimeout = 30
+	q.waitTimeSeconds = conf.WaitTimeSeconds
+	q.visibilityTimeout = conf.VisibilityTimeout
 	return &q, nil
 
 }
