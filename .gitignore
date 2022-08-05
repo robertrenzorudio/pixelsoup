@@ -2,7 +2,7 @@
 main
 
 # Log Files
-logs
+logs/log*
 
 # Envs
 .env
