@@ -27,7 +27,7 @@ func TestGetFormat(t *testing.T) {
 		got, gotErr := GetFormat(testFile)
 
 		if expectedErr == nil && gotErr != nil {
-			t.Error("expected no error")
+			t.Error("expected no error, got ", gotErr)
 		}
 
 		if expected != nil && got == nil {
