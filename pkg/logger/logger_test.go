@@ -2,7 +2,6 @@ package logger
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"testing"
 )
@@ -22,7 +21,6 @@ func TestFileLogging(t *testing.T) {
 	}
 
 	if logFile.Size() == 0 {
-		fmt.Println(logFile.Size())
 		t.Errorf("expected a log entry but non is entered")
 	}
 
