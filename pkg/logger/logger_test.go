@@ -17,11 +17,11 @@ func TestFileLogging(t *testing.T) {
 	logFile, err := os.Stat(fileName)
 
 	if errors.Is(err, os.ErrNotExist) {
-		t.Errorf("expected a log file but non is created")
+		t.Errorf("expected log file, got none")
 	}
 
 	if logFile.Size() == 0 {
-		t.Errorf("expected a log entry but non is entered")
+		t.Errorf("expected log entry, got none")
 	}
 
 	os.Remove(fileName)
