@@ -6,3 +6,6 @@ logs/log*
 
 # Envs
 .env
+
+# Etc
+.DS_Store
