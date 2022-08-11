@@ -10,9 +10,9 @@ import (
 func TestGetFormat(t *testing.T) {
 	someError := errors.New("some error")
 	tests := []struct {
-		input         string
-		expected      *Format
-		expectedError error
+		input       string
+		expected    *Format
+		expectedErr error
 	}{
 		{"test_video.mov", &Format{}, nil},
 		{"FILE_DNE.mp4", nil, someError},
@@ -22,11 +22,11 @@ func TestGetFormat(t *testing.T) {
 	for _, tt := range tests {
 		testFile := test.GetTestDataDir(tt.input)
 		expected := tt.expected
-		expectedError := tt.expectedError
+		expectedErr := tt.expectedErr
 
-		got, gotError := GetFormat(testFile)
+		got, gotErr := GetFormat(testFile)
 
-		if expectedError == nil && gotError != nil {
+		if expectedErr == nil && gotErr != nil {
 			t.Error("expected no error")
 		}
 
