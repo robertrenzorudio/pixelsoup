@@ -1,6 +1,10 @@
 package config
 
 const (
+	// App Name
+	APP_NAME = "pixelsoup"
+
+	// Logs
 	LogFileName = "logs/log.json"
 
 	// AWS
