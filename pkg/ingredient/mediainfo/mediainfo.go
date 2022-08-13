@@ -1,13 +1,10 @@
 package mediainfo
 
 import (
-	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"os/exec"
 
-	"github.com/google/shlex"
+	"github.com/robertrenzorudio/pixelsoup/pkg/runcommand"
 )
 
 type Format struct {
@@ -28,27 +25,12 @@ type outerFormat struct {
 }
 
 func GetFormat(fileName string) (*Format, error) {
-	cmdStr := fmt.Sprintf("ffprobe -v error -print_format json -show_format %s", fileName)
+	command := fmt.Sprintf("ffprobe -v error -print_format json -show_format %s", fileName)
 
-	args, err := shlex.Split(cmdStr)
-
-	if err != nil {
-		return nil, err
-	}
-
-	cmd := exec.Command(args[0], args[1:]...)
-	var stdout, stderr bytes.Buffer
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-	err = cmd.Run()
+	stdout, stderr, err := runcommand.Run(command)
 
 	if err != nil {
-		return nil, err
-	}
-
-	cmdErr := stderr.String()
-	if cmdErr != "" && cmdErr != "<nil>" {
-		return nil, errors.New(cmdErr)
+		return nil, fmt.Errorf("%s: %s", err.Error(), stderr.String())
 	}
 
 	outer := &outerFormat{}

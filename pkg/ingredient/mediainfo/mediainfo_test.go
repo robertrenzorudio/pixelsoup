@@ -28,9 +28,7 @@ func TestGetFormat(t *testing.T) {
 
 		if expectedErr == nil && gotErr != nil {
 			t.Error("expected no error, got ", gotErr)
-		}
-
-		if expected != nil && got == nil {
+		} else if expected != nil && got == nil {
 			t.Error("expected Format struct, got nil")
 		}
 	}
