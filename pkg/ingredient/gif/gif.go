@@ -1,15 +1,12 @@
 package gif
 
 import (
-	"bytes"
-	"errors"
 	"fmt"
 	"os"
-	"os/exec"
 	"strconv"
 
-	"github.com/google/shlex"
 	"github.com/robertrenzorudio/pixelsoup/pkg/ingredient/mediainfo"
+	"github.com/robertrenzorudio/pixelsoup/pkg/runcommand"
 )
 
 type VidToGifInput struct {
@@ -36,31 +33,21 @@ func (g *Gif) VidToGif(info *VidToGifInput) (outFileName string, err error) {
 		return "", err
 	}
 
+	base := "ffmpeg -hide_banner -loglevel error -y"
+	input := fmt.Sprintf("-ss %.2f -t %.2f -i %s", info.Start, info.Duration, info.InVidName)
+	filterComplex := fmt.Sprintf(
+		"-filter_complex '[0:v] fps=%d,scale=%d:-1,split [a][b];[a] palettegen [p];[b][p] paletteuse'",
+		info.Fps, info.Scale,
+	)
 	outFileName = info.OutGifName + ".gif"
-	cmdStr := fmt.Sprintf("ffmpeg -hide_banner -loglevel error -y -ss %.2f -t %.2f -i %s -filter_complex '[0:v] fps=%d,scale=%d:-1,split [a][b];[a] palettegen [p];[b][p] paletteuse' %s",
-		info.Start, info.Duration, info.InVidName, info.Fps, info.Scale, outFileName)
 
-	args, err := shlex.Split(cmdStr)
+	command := fmt.Sprintf("%s %s %s %s", base, input, filterComplex, outFileName)
 
-	if err != nil {
-		return "", err
-	}
-
-	cmd := exec.Command(args[0], args[1:]...)
-	var stdout, stderr bytes.Buffer
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-	err = cmd.Run()
+	_, stderr, err := runcommand.Run(command)
 
 	if err != nil {
 		os.Remove(outFileName)
-		return "", err
-	}
-
-	cmdErr := stderr.String()
-	if cmdErr != "" && cmdErr != "<nil>" {
-		os.Remove(outFileName)
-		return "", errors.New(cmdErr)
+		return "", fmt.Errorf("%s: %s", err.Error(), stderr.String())
 	}
 
 	return outFileName, nil

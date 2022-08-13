@@ -22,9 +22,8 @@ func TestVidToGif(t *testing.T) {
 
 		if expectedErr == nil && gotErr != nil {
 			t.Error("expected no error, got ", gotErr)
-		}
-
-		if expected != got {
+			continue
+		} else if expected != got {
 			t.Errorf("expected gif file name to be %s, got %s", expected, got)
 		}
 
@@ -35,7 +34,6 @@ func TestVidToGif(t *testing.T) {
 		}
 
 		os.Remove(got)
-
 	}
 }
 
@@ -52,6 +50,27 @@ func TestVidToGifInvalid(t *testing.T) {
 			t.Error("expected error, got none")
 			os.Remove(got)
 		}
+	}
+}
+
+func TestFileRemovalOnError(t *testing.T) {
+	vtg := New(config.MAX_GIF_DURATION)
+	vtgi := &VidToGifInput{
+		InVidName:  test.GetTestDataDir("test_video.mov"),
+		Start:      math.Inf(1),
+		Duration:   2,
+		Fps:        15,
+		Scale:      480,
+		OutGifName: "out"}
+	out, err := vtg.VidToGif(vtgi)
+
+	if err == nil {
+		t.Errorf("expected an error, got none")
+	}
+	_, err = os.Stat(out)
+	if !errors.Is(err, os.ErrNotExist) {
+		t.Error("expected no file to be created, got one")
+		os.Remove(out)
 	}
 }
 
