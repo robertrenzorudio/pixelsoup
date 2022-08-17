@@ -7,6 +7,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.15.15
 	github.com/aws/aws-sdk-go-v2/service/sqs v1.19.1
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510
+	github.com/joho/godotenv v1.4.0
 	go.uber.org/zap v1.21.0
 )
 
